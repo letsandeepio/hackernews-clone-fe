@@ -49,15 +49,6 @@ const NEW_LINKS_SUBSCRIPTION = gql`
 `;
 
 export default function LinkList() {
-  const _updateCacheAfterVote = (store, createVote, linkId) => {
-    const data = store.readQuery({ query: FEED_QUERY });
-
-    const votedLink = data.feed.links.find((link) => link.id === linkId);
-    votedLink.votes = createVote.link.votes;
-
-    store.writeQuery({ query: FEED_QUERY, data });
-  };
-
   const _subscribeToNewLinks = (subscribeToMore) => {
     subscribeToMore({
       document: NEW_LINKS_SUBSCRIPTION,
@@ -85,18 +76,14 @@ export default function LinkList() {
         if (error) return <div>Error</div>;
 
         _subscribeToNewLinks(subscribeToMore);
+        //_subscribeToNewVotes(subscribeToMore);
 
         const linksToRender = data.feed.links;
 
         return (
           <div>
             {linksToRender.map((link, index) => (
-              <Link
-                key={link.id}
-                link={link}
-                index={index}
-                updateStoreAfterVote={_updateCacheAfterVote}
-              />
+              <Link key={link.id} link={link} index={index} />
             ))}
           </div>
         );

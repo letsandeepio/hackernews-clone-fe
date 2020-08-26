@@ -24,6 +24,13 @@ const VOTE_MUTATION = gql`
 `;
 
 class Link extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      votes: this.props.link.votes.length
+    };
+  }
+
   render() {
     const authToken = localStorage.getItem(AUTH_TOKEN);
 
@@ -33,10 +40,15 @@ class Link extends Component {
           <span className="gray">{this.props.index + 1}.</span>
           {authToken && (
             <Mutation
+              onError={(error) => console.log(error)}
               mutation={VOTE_MUTATION}
               variables={{ linkId: this.props.link.id }}
-              update={(store, { data: { vote } }) =>
-                this.props.updateStoreAfterVote(store, vote, this.props.link.id)
+              onCompleted={() =>
+                this.setState((state) => {
+                  return {
+                    votes: state.votes + 1
+                  };
+                })
               }
             >
               {(voteMutation) => (
@@ -52,7 +64,7 @@ class Link extends Component {
             {this.props.link.description} ({this.props.link.url})
           </div>
           <div className="f6 lh-copy gray">
-            {this.props.link.votes.length} votes | by{' '}
+            {this.state.votes} votes | by{' '}
             {this.props.link.postedBy
               ? this.props.link.postedBy.name
               : 'Unknown'}{' '}
