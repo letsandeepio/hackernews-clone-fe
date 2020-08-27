@@ -28,6 +28,7 @@ class Header extends Component {
               className="ml1 pointer black"
               onClick={() => {
                 localStorage.removeItem(AUTH_TOKEN);
+                localStorage.removeItem('username');
                 this.props.history.push(`/`);
               }}
             >
