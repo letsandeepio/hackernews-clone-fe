@@ -31,6 +31,10 @@ class Link extends Component {
     };
   }
 
+  getHostName(url) {
+    return new URL(url).hostname;
+  }
+
   render() {
     const authToken = localStorage.getItem(AUTH_TOKEN);
 
@@ -61,7 +65,23 @@ class Link extends Component {
         </div>
         <div className="ml1">
           <div>
-            {this.props.link.description} ({this.props.link.url})
+            <a
+              href={this.props.link.url}
+              style={{
+                fontFamily: 'Verdana, Geneva, sans-serif',
+                fontSize: '13pt',
+                lineHeight: '14pt',
+                textDecoration: 'none',
+                color: 'black'
+              }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {this.props.link.description}{' '}
+              <span className="comhead">
+                ({this.getHostName(this.props.link.url)})
+              </span>
+            </a>
           </div>
           <div className="f6 lh-copy gray">
             {this.state.votes} votes | by{' '}

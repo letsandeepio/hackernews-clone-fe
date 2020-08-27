@@ -8,6 +8,9 @@ const SIGNUP_MUTATION = gql`
   mutation SignupMutation($email: String!, $password: String!, $name: String!) {
     signup(email: $email, password: $password, name: $name) {
       token
+      user {
+        name
+      }
     }
   }
 `;
@@ -16,6 +19,9 @@ const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
+      user {
+        name
+      }
     }
   }
 `;
@@ -79,13 +85,18 @@ class Login extends Component {
   }
 
   _confirm = async (data) => {
-    const { token } = this.state.login ? data.login : data.signup;
+    const { token, user } = this.state.login ? data.login : data.signup;
+    this._setUserName(user);
     this._saveUserData(token);
     this.props.history.push(`/`);
   };
 
   _saveUserData = (token) => {
     localStorage.setItem(AUTH_TOKEN, token);
+  };
+
+  _setUserName = (user) => {
+    localStorage.setItem('username', user.name);
   };
 }
 
