@@ -72,8 +72,14 @@ export default function LinkList() {
   return (
     <Query query={FEED_QUERY}>
       {({ loading, error, data, subscribeToMore }) => {
-        if (loading) return <div>Fetching</div>;
-        if (error) return <div>Error</div>;
+        if (loading)
+          return (
+            <div>
+              Fetching (please allow for Heroku Backend Dyno to warm up (approx
+              30 seconds)
+            </div>
+          );
+        if (error) return <div>Error fetching links.</div>;
 
         _subscribeToNewLinks(subscribeToMore);
         //_subscribeToNewVotes(subscribeToMore);
